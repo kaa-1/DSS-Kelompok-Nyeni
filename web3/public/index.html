@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seleksi Petani Penerima Bantuan</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      color: #2c3e50;
+    }
+    nav {
+      background: linear-gradient(90deg, #f1c40f, #f39c12);
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0 20px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      display: inline-block;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      height: 3px;
+      width: 0;
+      background-color: #ecf0f1;
+      transition: 0.3s ease;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    nav a:hover {
+      color: #f1f2f6;
+    }
+    nav img {
+      height: 40px;
+      user-select: none;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      background: white;
+      padding: 40px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.08);
+      border-radius: 12px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    header img {
+      width: 100px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      color: #e67e22;
+    }
+    h3 {
+      margin-top: 40px;
+      color: #f1c40f;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 20px 0;
+      font-size: 0.95rem;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    thead {
+      background: #f1c40f;
+      color: white;
+    }
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    tbody tr:hover {
+      background-color: #eaf2f8;
+    }
+    .anggota-container {
+      background: linear-gradient(to bottom right, #f1c40f, #f1c40f);
+      padding: 40px 30px;
+      border-radius: 20px;
+      color: rgb(255, 255, 255);
+      text-align: center;
+      width: 100%;
+      max-width: 700px;
+      margin: 40px auto;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    .anggota {
+      display: flex;
+      align-items: center;
+      background: rgb(212, 212, 212);
+      border-radius: 30px;
+      padding: 10px 20px;
+      margin-bottom: 15px;
+      backdrop-filter: blur(6px);
+      transition: background 0.3s;
+      justify-content: center;
+    }
+    .anggota:hover {
+      background: rgb(255, 255, 255);
+    }
+    .ikon {
+      background: #f1c40f;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 15px;
+      color: white;
+      font-weight: bold;
+    }
+    .nama {
+      color: #333333;
+      font-size: 1em;
+      text-align: left;
+      background-color: #fef3c700;
+      padding: 2px 6px;
+      border-radius: 6px;
+      user-select: text;
+    }
+    .crud-form {
+      background: #f8fafc;
+      border: 1px solid #f1c40f;
+      border-radius: 10px;
+      padding: 18px 16px 8px 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(241,196,15,0.08);
+      max-width: 100%;
+      transition: box-shadow 0.2s;
+    }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .crud-form input, .crud-form select {
+      padding: 8px 10px;
+      border: 1px solid #e1e1e1;
+      border-radius: 6px;
+      font-size: 1em;
+      outline: none;
+      background: #fffbe6;
+      transition: border 0.2s;
+    }
+    .crud-form input:focus, .crud-form select:focus {
+      border: 1.5px solid #f1c40f;
+      background: #fffde7;
+    }
+    .btn-tambah {
+      background: #f1c40f;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-tambah:hover {
+      background: #e67e22;
+    }
+    .btn-simpan {
+      background: #27ae60;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-simpan:hover {
+      background: #219150;
+    }
+    .btn-batal {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-left: 8px;
+    }
+    .btn-batal:hover {
+      background: #c0392b;
+    }
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        text-align: center;
+      }
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+      .form-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .crud-form {
+        padding: 12px 8px 6px 8px;
+      }
+    }
+    header p {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #e67e22;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div>
+    <a href="#kriteria">Kriteria</a>
+    <a href="#alternatif">Alternatif</a>
+    <a href="#perhitungan">Perhitungan</a>
+    <a href="#hasil">Hasil</a>
+  </div>
+  <img src="1.png" alt="Logo Universitas PGRI Semarang">
+</nav>
+
+<div class="container">
+  <header>
+    <img src="1.png" alt="Logo Universitas PGRI Semarang" />
+    <h1>Seleksi Penerima Bantuan Petani</h1>
+    <p>Berbasis Sistem Pendukung Keputusan SAW</p>
+  </header>
+
+  <!-- Nama anggota kelompok -->
+  <div class="anggota-container">
+    <div class="anggota">
+      <div class="ikon">👤</div>
+      <div class="nama">Agung Trylaksono (23670107)</div>
+    </div>
+    <div class="anggota">
+      <div class="ikon">👤</div>
+      <div class="nama">Taufiq Mansyur (23670096)</div>
+    </div>
+    <div class="anggota">
+      <div class="ikon">👤</div>
+      <div class="nama">Dhani Cahyo K (23670151)</div>
+    </div>
+    <div class="anggota">
+      <div class="ikon">👤</div>
+      <div class="nama">Rizki Haryditya Putra (23670091)</div>
+    </div>
+  </div>
+
+  <!-- Kriteria -->
+  <h3 id="kriteria" style="text-align: left;">Kriteria</h3>
+  <button type="button" id="showFormKriteria" class="btn-tambah">+ Tambah Kriteria</button>
+  <!-- Form Kriteria dengan styling yang rapi -->
+  <form id="form-kriteria" class="crud-form" style="display:none; margin:16px 0; flex-wrap:wrap;">
+    <div class="form-row">
+      <input type="text" id="kodeKriteria" placeholder="Kode" required maxlength="4">
+      <input type="text" id="namaKriteria" placeholder="Nama Kriteria" required>
+      <input type="number" id="bobotKriteria" placeholder="Bobot" required step="any" min="0" max="1">
+      <select id="tipeKriteria" required>
+        <option value="Benefit">Benefit</option>
+        <option value="Cost">Cost</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <button type="submit" class="btn-simpan">Tambah</button>
+      <button type="button" id="batalKriteria" class="btn-batal">Batal</button>
+    </div>
+  </form>
+  <table id="table-kriteria">
+    <thead>
+      <tr>
+        <th>Kode</th>
+        <th>Nama Kriteria</th>
+        <th>Bobot</th>
+        <th>Tipe</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data diisi oleh JS -->
+    </tbody>
+  </table>
+
+  <!-- Alternatif -->
+  <h3 id="alternatif" style="text-align: left;">Alternatif</h3>
+  <button type="button" id="showFormAlternatif" class="btn-tambah">+ Tambah Alternatif</button>
+  <form id="form-alternatif" class="crud-form" style="display:none; margin:16px 0; flex-wrap:wrap;">
+    <div class="form-row">
+      <input type="text" id="kodeAlternatif" placeholder="Kode" required maxlength="4">
+      <input type="text" id="namaAlternatif" placeholder="Nama" required>
+      <input type="number" id="lahanAlternatif" placeholder="Luas Lahan" required step="any">
+      <input type="number" id="penghasilanAlternatif" placeholder="Penghasilan" required step="any">
+      <input type="number" id="panenAlternatif" placeholder="Hasil Panen" required step="any">
+      <input type="number" id="lamaAlternatif" placeholder="Lama Usaha" required step="any">
+      <input type="number" id="anggotaAlternatif" placeholder="Jml Anggota" required step="any">
+    </div>
+    <div class="form-row">
+      <button type="submit" id="btnAlternatif" class="btn-simpan">Tambah</button>
+      <button type="button" id="batalAlternatif" class="btn-batal">Batal</button>
+    </div>
+  </form>
+  <table id="table-alternatif">
+    <thead>
+      <tr>
+        <th>Kode</th>
+        <th>Nama</th>
+        <th>Luas Lahan</th>
+        <th>Penghasilan</th>
+        <th>Hasil Panen</th>
+        <th>Lama Usaha</th>
+        <th>Jumlah Anggota Keluarga</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data diisi oleh JS -->
+    </tbody>
+  </table>
+
+  <!-- Normalisasi -->
+  <h3 id="normalisasi" style="text-align: left;">Normalisasi</h3>
+  <table id="table-normalisasi">
+    <thead>
+      <tr>
+        <th>Kode</th>
+        <th>Nama</th>
+        <th>Luas Lahan</th>
+        <th>Penghasilan</th>
+        <th>Hasil Panen</th>
+        <th>Lama Usaha</th>
+        <th>Jumlah Anggota Keluarga</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data diisi otomatis oleh JS -->
+    </tbody>
+  </table>
+
+  <!-- Perhitungan -->
+  <h3 id="perhitungan" style="text-align: left;">PERHITUNGAN SKOR SAW</h3>
+  <table id="table-perhitungan">
+    <thead>
+      <tr>
+        <th>Kode</th>
+        <th>Nama alternatif</th>
+        <th>Skor SAW</th>
+        <th>Ranking</th>
+        <th>Luas Lahan</th>
+        <th>Penghasilan</th>
+        <th>Hasil Panen</th>
+        <th>Lama Usaha Tani</th>
+        <th>Jumlah Anggota Keluarga</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data diisi otomatis oleh JS -->
+    </tbody>
+  </table>
+
+  <!-- Hasil -->
+  <h3 id="hasil" style="text-align: left;">Hasil Penerima Bantuan</h3>
+  <table id="table-hasil">
+    <thead>
+      <tr>
+        <th>Ranking</th>
+        <th>Kode</th>
+        <th>Nama Alternatif</th>
+        <th>Skor SAW</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data diisi otomatis oleh JS -->
+    </tbody>
+  </table>
+<script>
+// --- DATA
+let alternatifData = [];
+let normalisasiData = [];
+let perhitunganData = [];
+let hasilData = [];
+let kriteriaData = [];
+
+// --- LOAD DATA KRITERIA DARI BACKEND
+function loadKriteriaFromAPI(callback) {
+  fetch('/kriteria')
+    .then(res => res.json())
+    .then(data => {
+      kriteriaData = data;
+      renderKriteria();
+      if (callback) callback();
+    });
+}
+
+// --- LOAD DATA ALTERNATIF DARI BACKEND
+function loadPetaniFromAPI() {
+  fetch('/alternatif')
+    .then(res => res.json())
+    .then(data => {
+      alternatifData = data.map(p => ({
+        kode: p.kode,
+        nama: p.nama,
+        luas_lahan: p.luas_lahan,
+        penghasilan: p.penghasilan,
+        hasil_panen: p.hasil_panen,
+        lama_usaha_tani: p.lama_usaha_tani,
+        jumlah_anggota_keluarga: p.jumlah_anggota_keluarga
+      }));
+      renderAlternatif();
+      prosesOtomatis();
+    });
+}
+
+// --- NORMALISASI OTOMATIS (BENEFIT/COST & BOBOT DARI DB)
+function normalisasiAlternatif(data, kriteria) {
+  if (data.length === 0 || kriteria.length === 0) return [];
+  // Hitung min/max untuk setiap kriteria
+  const minMax = {};
+  kriteria.forEach(k => {
+    const key = k.nama.toLowerCase().replace(/ /g, '_');
+    minMax[key] = {
+      min: Math.min(...data.map(d => parseFloat(d[key]) || 0)),
+      max: Math.max(...data.map(d => parseFloat(d[key]) || 0))
+    };
+  });
+
+  return data.map(d => {
+    const norm = { kode: d.kode, nama: d.nama };
+    kriteria.forEach(k => {
+      const key = k.nama.toLowerCase().replace(/ /g, '_');
+      const val = parseFloat(d[key]) || 0;
+      if (k.tipe === "Benefit") {
+        norm[key] = (val / minMax[key].max).toFixed(4);
+      } else {
+        norm[key] = (minMax[key].min / val).toFixed(4);
+      }
+    });
+    return norm;
+  });
+}
+
+// --- HITUNG SKOR SAW OTOMATIS
+function hitungSkorSAW(normalisasiData, kriteria) {
+  return normalisasiData.map(d => {
+    let skor = 0;
+    kriteria.forEach(k => {
+      const key = k.nama.toLowerCase().replace(/ /g, '_');
+      skor += (parseFloat(d[key]) || 0) * (parseFloat(k.bobot) || 0);
+    });
+    return {
+      kode: d.kode,
+      nama: d.nama,
+      skor: skor.toFixed(4),
+      ...d
+    };
+  });
+}
+
+// --- RANKING OTOMATIS
+function rankingSAW(perhitunganData) {
+  let sorted = [...perhitunganData].sort((a, b) => b.skor - a.skor);
+  return sorted.map((d, i) => ({
+    ranking: i + 1,
+    kode: d.kode,
+    nama: d.nama,
+    skor: d.skor
+  }));
+}
+
+// --- RENDER TABEL ALTERNATIF
+let editAlternatifIndex = null;
+
+function renderAlternatif() {
+  const tbody = document.querySelector("#table-alternatif tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  // Urutkan berdasarkan kode (A1, A2, A3, ...)
+  const sorted = [...alternatifData].sort((a, b) => {
+    // Ambil angka setelah huruf, misal A1 -> 1, A11 -> 11
+    const numA = parseInt(a.kode.replace(/^\D+/g, '')) || 0;
+    const numB = parseInt(b.kode.replace(/^\D+/g, '')) || 0;
+    return numA - numB;
+  });
+
+  sorted.forEach((item, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.kode}</td>
+      <td>${item.nama}</td>
+      <td>${item.luas_lahan}</td>
+      <td>${item.penghasilan}</td>
+      <td>${item.hasil_panen}</td>
+      <td>${item.lama_usaha_tani}</td>
+      <td>${item.jumlah_anggota_keluarga}</td>
+      <td>
+        <button onclick="editAlternatif(${alternatifData.indexOf(item)})">Edit</button>
+        <button onclick="hapusAlternatif('${item.kode}')">Hapus</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Fungsi hapusAlternatif
+function hapusAlternatif(kode) {
+  if (!confirm("Yakin hapus data ini?")) return;
+  fetch('/alternatif?kode=' + encodeURIComponent(kode), {
+    method: 'DELETE'
+  }).then(res => {
+    if (res.ok) {
+      loadPetaniFromAPI();
+    } else {
+      alert("Gagal menghapus data");
+    }
+  });
+}
+
+// --- RENDER TABEL NORMALISASI
+function renderNormalisasi() {
+  const tbody = document.querySelector("#table-normalisasi tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  normalisasiData.forEach(d => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${d.kode}</td>
+      <td>${d.nama}</td>
+      ${kriteriaData.map(k => {
+        const key = k.nama.toLowerCase().replace(/ /g, '_');
+        return `<td>${d[key]}</td>`;
+      }).join('')}
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// --- RENDER TABEL PERHITUNGAN
+function renderPerhitungan() {
+  const tbody = document.querySelector("#table-perhitungan tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  perhitunganData.forEach((d, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${d.kode}</td>
+      <td>${d.nama}</td>
+      <td>${d.skor}</td>
+      <td>${i+1}</td>
+      ${kriteriaData.map(k => {
+        const key = k.nama.toLowerCase().replace(/ /g, '_');
+        return `<td>${d[key]}</td>`;
+      }).join('')}
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// --- RENDER TABEL HASIL
+function renderHasil() {
+  const tbody = document.querySelector("#table-hasil tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  hasilData.forEach(d => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${d.ranking}</td>
+      <td>${d.kode}</td>
+      <td>${d.nama}</td>
+      <td>${d.skor}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// --- PROSES OTOMATIS SETELAH DATA BERUBAH
+function prosesOtomatis() {
+  if (kriteriaData.length === 0) return;
+  normalisasiData = normalisasiAlternatif(alternatifData, kriteriaData);
+  perhitunganData = hitungSkorSAW(normalisasiData, kriteriaData);
+  hasilData = rankingSAW(perhitunganData);
+  renderNormalisasi();
+  renderPerhitungan();
+  renderHasil();
+}
+
+// --- FORM TAMBAH ALTERNATIF (POST KE BACKEND)
+document.getElementById("form-alternatif").onsubmit = function(e) {
+  e.preventDefault();
+  const data = {
+    kode: document.getElementById("kodeAlternatif").value.trim(),
+    nama: document.getElementById("namaAlternatif").value.trim(),
+    luas_lahan: parseFloat(document.getElementById("lahanAlternatif").value),
+    penghasilan: parseFloat(document.getElementById("penghasilanAlternatif").value),
+    hasil_panen: parseFloat(document.getElementById("panenAlternatif").value),
+    lama_usaha_tani: parseFloat(document.getElementById("lamaAlternatif").value),
+    jumlah_anggota_keluarga: parseFloat(document.getElementById("anggotaAlternatif").value)
+  };
+
+  // Jika sedang edit, gunakan PUT, jika tambah gunakan POST
+  if (editAlternatifIndex !== null) {
+    fetch('/alternatif', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(res => {
+      if (res.ok) {
+        this.reset();
+        this.style.display = "none";
+        document.getElementById("showFormAlternatif").style.display = "inline-block";
+        document.getElementById("batalAlternatif").style.display = "none";
+        document.getElementById("kodeAlternatif").readOnly = false;
+        editAlternatifIndex = null;
+        loadPetaniFromAPI();
+      } else {
+        alert("Gagal mengedit data");
+      }
+    });
+  } else {
+    fetch('/alternatif', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(res => {
+      if (res.ok) {
+        this.reset();
+        this.style.display = "none";
+        document.getElementById("showFormAlternatif").style.display = "inline-block";
+        document.getElementById("batalAlternatif").style.display = "none";
+        loadPetaniFromAPI();
+      } else {
+        alert("Gagal menambah data");
+      }
+    });
+  }
+};
+
+// --- TOMBOL TAMPIL/BATAL FORM
+document.getElementById("showFormAlternatif").onclick = function() {
+  document.getElementById("form-alternatif").style.display = "block";
+  this.style.display = "none";
+  document.getElementById("batalAlternatif").style.display = "inline";
+};
+document.getElementById("batalAlternatif").onclick = function() {
+  document.getElementById("form-alternatif").reset();
+  document.getElementById("form-alternatif").style.display = "none";
+  document.getElementById("showFormAlternatif").style.display = "inline-block";
+  this.style.display = "none";
+};
+
+function editAlternatif(idx) {
+  const data = alternatifData[idx];
+  editAlternatifIndex = idx;
+  document.getElementById("kodeAlternatif").value = data.kode;
+  document.getElementById("namaAlternatif").value = data.nama;
+  document.getElementById("lahanAlternatif").value = data.luas_lahan;
+  document.getElementById("penghasilanAlternatif").value = data.penghasilan;
+  document.getElementById("panenAlternatif").value = data.hasil_panen;
+  document.getElementById("lamaAlternatif").value = data.lama_usaha_tani;
+  document.getElementById("anggotaAlternatif").value = data.jumlah_anggota_keluarga;
+  document.getElementById("form-alternatif").style.display = "block";
+  document.getElementById("showFormAlternatif").style.display = "none";
+  document.getElementById("batalAlternatif").style.display = "inline";
+  document.getElementById("kodeAlternatif").readOnly = true; // kode tidak bisa diubah saat edit
+}
+
+// --- RENDER TABEL KRITERIA
+function renderKriteria() {
+  const tbody = document.querySelector("#table-kriteria tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  kriteriaData.forEach((k, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${k.kode}</td>
+      <td>${k.nama}</td>
+      <td>${k.bobot}</td>
+      <td>${k.tipe}</td>
+      <td>
+        <button onclick="editKriteria(${i})">Edit</button>
+        <button onclick="hapusKriteria('${k.kode}')">Hapus</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// --- TAMBAH KRITERIA (POST KE BACKEND)
+document.getElementById("form-kriteria").onsubmit = function(e) {
+  e.preventDefault();
+  const data = {
+    kode: document.getElementById("kodeKriteria").value.trim(),
+    nama: document.getElementById("namaKriteria").value.trim(),
+    bobot: parseFloat(document.getElementById("bobotKriteria").value),
+    tipe: document.getElementById("tipeKriteria").value
+  };
+
+  // Jika sedang edit, gunakan PUT, jika tambah gunakan POST
+  if (editKriteriaIndex !== null) {
+    fetch('/kriteria', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(res => {
+      if (res.ok) {
+        this.reset();
+        this.style.display = "none";
+        document.getElementById("showFormKriteria").style.display = "inline-block";
+        document.getElementById("batalKriteria").style.display = "none";
+        document.getElementById("kodeKriteria").readOnly = false;
+        editKriteriaIndex = null;
+        loadKriteriaFromAPI(() => {
+          renderKriteria();
+          prosesOtomatis();
+        });
+      } else {
+        alert("Gagal mengedit kriteria");
+      }
+    });
+  } else {
+    fetch('/kriteria', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(res => {
+      if (res.ok) {
+        this.reset();
+        this.style.display = "none";
+        document.getElementById("showFormKriteria").style.display = "inline-block";
+        document.getElementById("batalKriteria").style.display = "none";
+        loadKriteriaFromAPI(() => {
+          renderKriteria();
+          prosesOtomatis();
+        });
+      } else {
+        alert("Gagal menambah kriteria");
+      }
+    });
+  }
+};
+
+// --- TOMBOL TAMPIL/BATAL FORM KRITERIA
+document.getElementById("showFormKriteria").onclick = function() {
+  document.getElementById("form-kriteria").style.display = "block";
+  this.style.display = "none";
+  document.getElementById("batalKriteria").style.display = "inline";
+};
+document.getElementById("batalKriteria").onclick = function() {
+  document.getElementById("form-kriteria").reset();
+  document.getElementById("form-kriteria").style.display = "none";
+  document.getElementById("showFormKriteria").style.display = "inline-block";
+  this.style.display = "none";
+  document.getElementById("kodeKriteria").readOnly = false;
+  editKriteriaIndex = null;
+};
+
+// --- HAPUS KRITERIA (OPSIONAL, HAPUS DARI BACKEND)
+function hapusKriteria(kode) {
+  if (!confirm("Yakin hapus kriteria ini?")) return;
+  fetch('/kriteria?kode=' + encodeURIComponent(kode), {
+    method: 'DELETE'
+  }).then(res => {
+    if (res.ok) {
+      loadKriteriaFromAPI(() => {
+        renderKriteria();
+        prosesOtomatis();
+      });
+    } else {
+      alert("Gagal menghapus kriteria");
+    }
+  });
+}
+
+// --- LOAD DATA SAAT HALAMAN DIMUAT
+window.onload = function() {
+  loadKriteriaFromAPI(() => {
+    loadPetaniFromAPI();
+  });
+};
+
+let editKriteriaIndex = null;
+
+function editKriteria(idx) {
+  const data = kriteriaData[idx];
+  editKriteriaIndex = idx;
+  document.getElementById("kodeKriteria").value = data.kode;
+  document.getElementById("namaKriteria").value = data.nama;
+  document.getElementById("bobotKriteria").value = data.bobot;
+  document.getElementById("tipeKriteria").value = data.tipe;
+  document.getElementById("form-kriteria").style.display = "block";
+  document.getElementById("showFormKriteria").style.display = "none";
+  document.getElementById("batalKriteria").style.display = "inline";
+  document.getElementById("kodeKriteria").readOnly = true; // kode tidak bisa diubah saat edit
+}
+</script>
+</body>
+</html>
+
